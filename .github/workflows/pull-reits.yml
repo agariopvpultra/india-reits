@@ -1,0 +1,31 @@
+name: Pull India REITs
+
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: '30 12 * * 1'
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run the puller
+        run: python pull_india_reits.py --out india_reits.xlsx
+
+      - name: Upload the Excel file
+        uses: actions/upload-artifact@v4
+        with:
+          name: india-reits-excel
+          path: india_reits.xlsx
+          if-no-files-found: error
